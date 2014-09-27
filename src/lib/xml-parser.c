@@ -8,19 +8,13 @@ void processNode(xmlTextReaderPtr reader) {
     xmlChar *attrib_name, *value;
     attrib_name = xmlTextReaderName(reader);
 
-    /* FIXME This does not work as intended, 'Next' element after the 
-     * SCPDURL should be the actual value of it, but it is empty :-(
-     */
-    if(strcmp((const char *) attrib_name, "SCPDURL") == 0) {
-        int ret = xmlTextReaderNext(reader);
-        if(ret == 1) {
-            attrib_name = xmlTextReaderName(reader);
-            value = xmlTextReaderValue(reader);
+    if(xmlStrcmp(attrib_name, (const xmlChar *) "SCPDURL") == 0) {
+        /* To read contents between attributes we need its childs with "InnerXML" */
+        value = xmlTextReaderReadInnerXml(reader);
+        if(value != NULL && xmlStrcmp(value, (const xmlChar *) "") != 0) {
             printf("SCPDURL: attrib_name: '%s', value: '%s'\n", attrib_name, value);
-            xmlFree(value);
-        } else {
-            printf("NOT FOUND\n");
         }
+        xmlFree(value);
     }
     xmlFree(attrib_name);
 }
