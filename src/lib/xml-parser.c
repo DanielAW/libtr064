@@ -7,7 +7,10 @@
 void processNode(xmlTextReaderPtr reader) {
     xmlChar *attrib_name, *value;
     attrib_name = xmlTextReaderName(reader);
-    
+
+    /* FIXME This does not work as intended, 'Next' element after the 
+     * SCPDURL should be the actual value of it, but it is empty :-(
+     */
     if(strcmp((const char *) attrib_name, "SCPDURL") == 0) {
         int ret = xmlTextReaderNext(reader);
         if(ret == 1) {
@@ -35,7 +38,6 @@ void parse_desc(SessionHandle *handle,const char *xmlString) {
     xmlTextReaderPtr reader;
     int ret;
 
-    //reader = xmlNewTextReaderFilename(filename);
     reader = xmlReaderForDoc((const xmlChar *) xmlString, NULL, NULL, 0);
     if (reader != NULL) {
         ret = xmlTextReaderRead(reader);
