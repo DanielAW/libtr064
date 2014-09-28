@@ -3,21 +3,34 @@
 
 #include <curl/curl.h>
 
-typedef struct {
+struct Action {
     char *action_name;
-    char *service_type;
-} Service;
+    struct Action *next;
+};
 
-typedef struct {
+struct Service {
+    char *service_type;
+    char *scpd_url;
+    struct Action *action_list;
+    struct Service *next;
+};
+
+struct SessionHandle{
     char *password;
     char *ip_addr;
     CURL *curl;
-    Service services[];
-} SessionHandle;
+    size_t service_cnt;
+    struct Service *service_list;
+};
 
-typedef struct {
+struct XmlBuffer{
     char *buffer;
     size_t size;
-} XmlBuffer;
+};
+
+typedef struct Action Action;
+typedef struct Service Service;
+typedef struct SessionHandle SessionHandle;
+typedef struct XmlBuffer XmlBuffer;
 
 #endif /* TR064_DATA_TYPES_H_ */

@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.0)
-project(libtr064)
+#project(libtr064)
 
 find_package(CURL REQUIRED)
 #message("CURL Found? " ${CURL_FOUND})
@@ -10,5 +10,5 @@ find_package(LibXml2 REQUIRED)
 # NOT in /usr/include/libxml
 include_directories(${LIBXML2_INCLUDE_DIR})
 
-add_library(libtr064 SHARED connect.c xml-parser.c)
-target_link_libraries(libtr064 curl xml2)
+add_library(tr064 SHARED connect.c xml-parser.c)
+target_link_libraries(tr064 curl xml2)

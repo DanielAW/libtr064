@@ -11,16 +11,6 @@ void build_url(char buf[], int buf_size, const char *ip_addr) {
     snprintf(buf, buf_size, "%s%s%s%s%s%s", "http://", ip_addr, ":", TR064_PORT, "/", TR064_FILE);
 }
 
-void tr064_cleanup(SessionHandle *handle) {
-
-    /* libcurl cleanup */
-    curl_easy_cleanup(handle->curl);
-
-    free(handle->password);
-    free(handle->ip_addr);
-    free(handle);
-
-}
 
 size_t curl_data_callback(void *actual_buffer, size_t size, size_t nmemb, void *xml_buffer_p) {
     size_t realsize = size * nmemb;
@@ -72,6 +62,19 @@ char *tr064_request_description(SessionHandle *handle) {
     }
 }
 
+void tr064_cleanup(SessionHandle *handle) {
+
+    /* libcurl cleanup */
+    curl_easy_cleanup(handle->curl);
+
+    free(handle->password);
+    free(handle->ip_addr);
+
+    /* TODO free services and actions */
+
+    free(handle);
+}
+
 SessionHandle *tr064_init(const char *l_password, const char *l_ip_addr) {
     SessionHandle *handle = (SessionHandle *) malloc(sizeof(SessionHandle));
 
@@ -80,6 +83,8 @@ SessionHandle *tr064_init(const char *l_password, const char *l_ip_addr) {
 
     handle->password = strdup(l_password);
     handle->ip_addr = strdup(l_ip_addr);
+
+    handle->service_cnt = 0;
 
     const char *xml_data = tr064_request_description(handle);   
     //printf("RESULT: %s\n", xml_data);

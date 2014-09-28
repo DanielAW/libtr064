@@ -3,23 +3,47 @@
 #include <libxml/xmlreader.h>
 #include "xml-parser.h"
 
-/* handling of a node in the tree */
-void processNode(xmlTextReaderPtr reader) {
-    xmlChar *attrib_name, *value;
-    attrib_name = xmlTextReaderName(reader);
+char *get_content_from_attribute(xmlTextReaderPtr reader, const char *attribute) {
+    xmlChar *value;
+    char *ret;
 
-    if(xmlStrcmp(attrib_name, (const xmlChar *) "SCPDURL") == 0) {
-        /* To read contents between attributes we need its childs with "InnerXML" */
-        value = xmlTextReaderReadInnerXml(reader);
-        if(value != NULL && xmlStrcmp(value, (const xmlChar *) "") != 0) {
-            printf("SCPDURL: attrib_name: '%s', value: '%s'\n", attrib_name, value);
-        }
-        xmlFree(value);
+    /* To read contents between attributes we need its children with "InnerXML" */
+    value = xmlTextReaderReadInnerXml(reader);
+    if(value != NULL && xmlStrcmp(value, (const xmlChar *) "") != 0) {
+        //printf("attrib_name: '%s', value: '%s'\n", attrib_name, value);
+        ret = (char *) value;
+    } else {
+        ret = NULL;
     }
-    xmlFree(attrib_name);
+    //xmlFree(value);
+    
+    return ret;
 }
 
-void parse_desc(SessionHandle *handle,const char *xmlString) {
+/** handling of a node in the tree
+ * add found data to data model
+ */
+void processNode(SessionHandle *handle, xmlTextReaderPtr reader) {
+    xmlChar *attrib_name = xmlTextReaderName(reader);
+
+    if(xmlStrcmp(attrib_name, (const xmlChar *) "serviceType") == 0) {
+        char *type = get_content_from_attribute(reader, "serviceType");
+        if(type != NULL) {
+            handle->service_cnt++;
+            //TODO: Add to handler
+            Service *service = (Service *) malloc(sizeof(Service));
+            service->service_type = get_content_from_attribute(reader, "serviceType");
+            printf("SERVICE_TYPE: '%s'\n", service->service_type);
+        }
+    }
+    xmlFree(attrib_name);
+    //get_content_from_attribute(reader, "controlURL");
+    
+    //TODO:
+    //Free service + service->service_type
+}
+
+void parse_desc(SessionHandle *handle, const char *xmlString) {
     /*
      * this initialize the library and check potential ABI mismatches
      * between the version it was compiled for and the actual shared
@@ -27,8 +51,6 @@ void parse_desc(SessionHandle *handle,const char *xmlString) {
      */
     LIBXML_TEST_VERSION
 
-    /* TODO Get Services and write into SessionHandle->services array */
-    
     xmlTextReaderPtr reader;
     int ret;
 
@@ -36,7 +58,7 @@ void parse_desc(SessionHandle *handle,const char *xmlString) {
     if (reader != NULL) {
         ret = xmlTextReaderRead(reader);
         while (ret == 1) {
-            processNode(reader);
+            processNode(handle, reader);
             ret = xmlTextReaderRead(reader);
         }
         xmlFreeTextReader(reader);
