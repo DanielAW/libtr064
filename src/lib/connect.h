@@ -12,7 +12,7 @@ SessionHandle *tr064_init(const char *l_password, const char *l_ip_addr);
 
 void tr064_cleanup(SessionHandle *handle);
 
-char *tr064_request_description(SessionHandle *handle);
+char* tr064_request_description(SessionHandle *handle);
 
 #endif /* TR064_CONNECT_H_ */
 

@@ -32,7 +32,7 @@ size_t curl_data_callback(void *actual_buffer, size_t size, size_t nmemb, void *
 /**
  * Request tr64desc.xml file
  */
-char *tr064_request_description(SessionHandle *handle) {
+char* tr064_request_description(SessionHandle *handle) {
     CURLcode res;
 
     char url[256];
@@ -70,7 +70,17 @@ void tr064_cleanup(SessionHandle *handle) {
     free(handle->password);
     free(handle->ip_addr);
 
-    /* TODO free services and actions */
+    /* TODO free actions */
+    Service* cur_service = handle->service_list;
+    Service* last_service = NULL;
+    while(cur_service != NULL) {
+        last_service = cur_service;
+        cur_service = cur_service->next;
+        free(last_service->service_type);
+        free(last_service->control_url);
+        free(last_service->scpd_url);
+        free(last_service);
+    }
 
     free(handle);
 }
@@ -84,12 +94,13 @@ SessionHandle *tr064_init(const char *l_password, const char *l_ip_addr) {
     handle->password = strdup(l_password);
     handle->ip_addr = strdup(l_ip_addr);
 
-    handle->service_cnt = 0;
+    handle->service_list = NULL;
 
-    const char *xml_data = tr064_request_description(handle);   
-    //printf("RESULT: %s\n", xml_data);
+    char *xml_data = tr064_request_description(handle);   
 
     get_services(handle, xml_data);
+
+    free(xml_data);
 
     return handle;
 }

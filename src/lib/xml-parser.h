@@ -3,6 +3,6 @@
 
 #include "data-types.h"
 
-void get_services(SessionHandle *handle, const char *xmlString);
+void get_services(SessionHandle *handle, char *xmlString);
 
 #endif /* XML_PARSER_H_ */

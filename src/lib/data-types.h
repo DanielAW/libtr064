@@ -10,6 +10,7 @@ struct Action {
 
 struct Service {
     char *service_type;
+    char *control_url;
     char *scpd_url;
     struct Action *action_list;
     struct Service *next;
@@ -19,7 +20,6 @@ struct SessionHandle{
     char *password;
     char *ip_addr;
     CURL *curl;
-    size_t service_cnt;
     struct Service *service_list;
 };
 
