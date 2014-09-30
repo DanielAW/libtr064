@@ -10,12 +10,17 @@ FRITZ_USERNAME = 'dslf-config'
 FRITZ_REALM = 'F!Box SOAP-Auth'
 
 #CONTROL_URL = 'upnp/control/lanconfigsecurity'
-CONTROL_URL = 'upnp/control/wlanconfig2'
+
+# mit ner '1' hinten raus ist das 1. WLAN Gerät gemeint, also 2.4 GHz
+# mit '2' hinten raus (auch bei der SOAPACTION und im Body beachten!) ist 
+# das 5 GHz device gemeint, siehe 'wlanconfigSCPD.pdf'
+CONTROL_URL = 'upnp/control/wlanconfig1'
+
 #CONTROL_URL2 = 'upnp/control/deviceinfo'
 
 #SOAPACTION = 'urn:dslforum-org:service:DeviceInfo:1#GetSecurityPort'
 #SOAPACTION = 'urn:dslforum-org:service:LANConfigSecurity:1#GetInfo'
-SOAPACTION = 'urn:dslforum-org:service:WLANConfiguration:2#SetChannel'
+SOAPACTION = 'urn:dslforum-org:service:WLANConfiguration:1#SetChannel'
 #SOAPACTION2 = 'urn:dslforum-org:service:DeviceInfo:1#GetDeviceLog'
 
 header = {'soapaction': SOAPACTION,
@@ -31,8 +36,8 @@ body = """
         """
               
 action = """
-            <u:SetChannel xmlns:u="urn:dslforum-org:service:WLANConfiguration:2">
-            <NewChannel>9</NewChannel>
+            <u:SetChannel xmlns:u="urn:dslforum-org:service:WLANConfiguration:1">
+            <NewChannel>1</NewChannel>
             </u:SetChannel>
          """
 
