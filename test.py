@@ -9,12 +9,14 @@ FRITZ_TCP_PORT = 49000
 FRITZ_USERNAME = 'dslf-config'
 FRITZ_REALM = 'F!Box SOAP-Auth'
 
-#CONTROL_URL = '/upnp/control/deviceinfo'
-CONTROL_URL = 'upnp/control/lanconfigsecurity'
+#CONTROL_URL = 'upnp/control/lanconfigsecurity'
+CONTROL_URL = 'upnp/control/wlanconfig2'
+#CONTROL_URL2 = 'upnp/control/deviceinfo'
 
 #SOAPACTION = 'urn:dslforum-org:service:DeviceInfo:1#GetSecurityPort'
 #SOAPACTION = 'urn:dslforum-org:service:LANConfigSecurity:1#GetInfo'
-SOAPACTION = 'urn:dslforum-org:service:DeviceInfo:1#GetDeviceLog'
+SOAPACTION = 'urn:dslforum-org:service:WLANConfiguration:2#GetChannelInfo'
+#SOAPACTION2 = 'urn:dslforum-org:service:DeviceInfo:1#GetDeviceLog'
 
 header = {'soapaction': SOAPACTION,
           'content-type': 'text/xml',
@@ -24,16 +26,19 @@ body = """
     <?xml version="1.0" encoding="utf-8"?>
         <s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
         xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-            <s:Body>
-                %s
-            </s:Body>
+            <s:Body>%s</s:Body>
         </s:Envelope>
         """
               
 action = """
-            <u:GetDeviceLog xmlns:u="urn:dslforum-org:service:DeviceInfo:1">
-            </u:GetDeviceLog>
+            <u:GetChannelInfo xmlns:u="urn:dslforum-org:service:WLANConfiguration:2">
+            </u:GetChannelInfo>
          """
+
+#action2 = """
+#            <u:GetDeviceLog xmlns:u="urn:dslforum-org:service:DeviceInfo:1">
+#            </u:GetDeviceLog>
+#          """
 
 #            <u:GetSecurityPort xmlns:u="urn:dslforum-org:service:DeviceInfo:1">
 #            </u:GetSecurityPort>
