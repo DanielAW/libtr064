@@ -15,7 +15,7 @@ CONTROL_URL = 'upnp/control/wlanconfig2'
 
 #SOAPACTION = 'urn:dslforum-org:service:DeviceInfo:1#GetSecurityPort'
 #SOAPACTION = 'urn:dslforum-org:service:LANConfigSecurity:1#GetInfo'
-SOAPACTION = 'urn:dslforum-org:service:WLANConfiguration:2#GetChannelInfo'
+SOAPACTION = 'urn:dslforum-org:service:WLANConfiguration:2#SetChannel'
 #SOAPACTION2 = 'urn:dslforum-org:service:DeviceInfo:1#GetDeviceLog'
 
 header = {'soapaction': SOAPACTION,
@@ -31,8 +31,9 @@ body = """
         """
               
 action = """
-            <u:GetChannelInfo xmlns:u="urn:dslforum-org:service:WLANConfiguration:2">
-            </u:GetChannelInfo>
+            <u:SetChannel xmlns:u="urn:dslforum-org:service:WLANConfiguration:2">
+            <NewChannel>9</NewChannel>
+            </u:SetChannel>
          """
 
 #action2 = """
