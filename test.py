@@ -20,6 +20,7 @@ CONTROL_URL = 'upnp/control/wlanconfig1'
 
 #SOAPACTION = 'urn:dslforum-org:service:DeviceInfo:1#GetSecurityPort'
 #SOAPACTION = 'urn:dslforum-org:service:LANConfigSecurity:1#GetInfo'
+# serviceType#Action
 SOAPACTION = 'urn:dslforum-org:service:WLANConfiguration:1#SetChannel'
 #SOAPACTION2 = 'urn:dslforum-org:service:DeviceInfo:1#GetDeviceLog'
 
@@ -35,6 +36,7 @@ body = """
         </s:Envelope>
         """
               
+# NewChannel == Argument
 action = """
             <u:SetChannel xmlns:u="urn:dslforum-org:service:WLANConfiguration:1">
             <NewChannel>1</NewChannel>
