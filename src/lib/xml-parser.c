@@ -23,16 +23,16 @@ void print_service_list(SessionHandle *handle) {
             printf("SERVICE_TYPE: '%s'\n", cur_service->service_type);
         }
         if(cur_service->control_url != NULL) {
-            printf("CONTROL_URL: '%s'\n", cur_service->control_url);
+            printf("\tCONTROL_URL: '%s'\n", cur_service->control_url);
         }
         if(cur_service->scpd_url != NULL) {
-            printf("SCPD_URL: '%s'\n", cur_service->scpd_url);
+            printf("\tSCPD_URL: '%s'\n", cur_service->scpd_url);
         }
         cur_service = cur_service->next;
     }
 }
 
-char *get_content_from_attribute(xmlTextReaderPtr reader, const char *attribute) {
+char *get_content_from_attribute(xmlTextReaderPtr reader) {
     xmlChar* value;
     char* ret;
 
@@ -77,7 +77,7 @@ Service *get_service_by_type(SessionHandle *handle, const char *service_type) {
 
 void add_value_to_service(SessionHandle *handle, xmlTextReaderPtr reader, Service *service, const char *attribute, char *current_service_type) {
     char *value = NULL;
-    value = get_content_from_attribute(reader, attribute);
+    value = get_content_from_attribute(reader);
     if(value != NULL) {
         service = get_service_by_type(handle, current_service_type);
         if(service != NULL) {
@@ -103,9 +103,8 @@ void processNode(SessionHandle *handle, xmlTextReaderPtr reader, char *current_s
     char *value = NULL;
 
     if(xmlStrcmp(attrib_name, (const xmlChar *) "serviceType") == 0) {
-        value = get_content_from_attribute(reader, "serviceType");
+        value = get_content_from_attribute(reader);
         if(value != NULL) {
-            rtrim(value);
             service = (Service *) malloc(sizeof(Service));
             if(service != NULL) {
                 service->service_type = value;
@@ -145,7 +144,7 @@ int parse_desc(SessionHandle *handle, char *xmlString) {
      * we have to remember the current service type 
      * service_type is like an unique ID 
      */
-    size_t current_size_type_len = 50;
+    size_t current_size_type_len = 256;
     char current_service_type[current_size_type_len];
 
     reader = xmlReaderForDoc((const xmlChar *) xmlString, NULL, NULL, 0);
